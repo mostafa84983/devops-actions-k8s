@@ -40,7 +40,7 @@ jobs:
         username: ${{ secrets.EC2_USER }}
         key: ${{ secrets.EC2_SSH_KEY }}
         source: "k8s/*.yaml"
-        target: "~/k8s"
+        target: "~"
 
     - name: Deploy to EC2 via SSH
       uses: appleboy/ssh-action@v0.1.10
