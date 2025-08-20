@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: flask-app
-        image: 050752620342.dkr.ecr.us-east-1.amazonaws.com/flask-k8s-demo:latest
+        image: 050752620342.dkr.ecr.us-east-1.amazonaws.com/flask-k8s-demo:PLACEHOLDER # Github Action will replace this with the actual image
         ports:
         - containerPort: 5000
       imagePullSecrets:

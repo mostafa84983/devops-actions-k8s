@@ -26,7 +26,7 @@ jobs:
 
     - name: Build, tag, and push image to ECR
       run: |
-        IMAGE_TAG=latest
+        IMAGE_TAG=${GITHUB_SHA::7}
         ECR_REPO=${{ secrets.ECR_REPOSITORY }}
         docker build -t $ECR_REPO:$IMAGE_TAG ./app
         docker push $ECR_REPO:$IMAGE_TAG
@@ -38,5 +38,5 @@ jobs:
         username: ${{ secrets.EC2_USER }}
         key: ${{ secrets.EC2_SSH_KEY }}
         script: |
-          sudo kubectl set image deployment/flask-app flask-app=${{ secrets.ECR_REPOSITORY }}:latest -n demo
+          sudo kubectl set image deployment/flask-app flask-app=${{ secrets.ECR_REPOSITORY }}:$IMAGE_TAG -n demo
           sudo kubectl rollout status deployment/flask-app -n demo
