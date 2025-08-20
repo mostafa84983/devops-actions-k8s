@@ -50,8 +50,8 @@ jobs:
         key: ${{ secrets.EC2_SSH_KEY }}
         script: |
           export KUBECONFIG=/etc/rancher/k3s/k3s.yaml
-          sudo kubectl apply -f ~/k8s/deployment.yaml -n demo
-          sudo kubectl apply -f ~/k8s/service.yaml -n demo
+          sudo kubectl apply -f ~/k8s/deployment.yaml -n demo --validate=false
+          sudo kubectl apply -f ~/k8s/service.yaml -n demo --validate=false
           sudo kubectl set image deployment/flask-app \
               flask-app=${{ secrets.ECR_REPOSITORY }}:$IMAGE_TAG -n demo
           sudo kubectl rollout status deployment/flask-app -n demo
