@@ -38,5 +38,5 @@ jobs:
         username: ${{ secrets.EC2_USER }}
         key: ${{ secrets.EC2_SSH_KEY }}
         script: |
-          kubectl set image deployment/flask-app flask-app=${{ secrets.ECR_REPOSITORY }}:latest -n demo
-          kubectl rollout status deployment/flask-app -n demo
+          sudo kubectl set image deployment/flask-app flask-app=${{ secrets.ECR_REPOSITORY }}:latest -n demo
+          sudo kubectl rollout status deployment/flask-app -n demo
