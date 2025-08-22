@@ -45,6 +45,11 @@ jobs:
         echo "${{ secrets.KUBECONFIG }}" | base64 -d > ~/.kube/config
         chmod 600 ~/.kube/config
 
+    - name: Create Kubernetes namespace
+      run: |
+        kubectl apply -f k8s/namespace.yaml
+        
+
     - name: Create Kubernetes ECR pull secret
       run: |
         kubectl delete secret ecr-secret -n demo --ignore-not-found
@@ -55,9 +60,8 @@ jobs:
           -n demo
     - name: Apply Kubernetes manifests
       run: |
-        kubectl apply -f k8s/namespace.yaml --validate=false
-        kubectl apply -f k8s/deployment.yaml -n demo --validate=false
-        kubectl apply -f k8s/service.yaml -n demo --validate=false
+        kubectl apply -f k8s/deployment.yaml -n demo
+        kubectl apply -f k8s/service.yaml -n demo
         kubectl rollout status deployment/flask-app -n demo
         kubectl get all -n demo
     - name: Cleanup old ReplicaSets
