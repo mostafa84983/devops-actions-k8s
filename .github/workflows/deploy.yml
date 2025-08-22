@@ -60,3 +60,14 @@ jobs:
         kubectl apply -f k8s/service.yaml -n demo --validate=false
         kubectl rollout status deployment/flask-app -n demo
         kubectl get all -n demo
+    - name: Cleanup old ReplicaSets
+      run: |
+        # Keep only the last 2 ReplicaSets for each deployment
+        for deploy in $(kubectl get deploy -n demo -o jsonpath='{.items[*].metadata.name}'); do
+          kubectl get rs -n demo \
+            --selector=app=$deploy \
+            --sort-by=.metadata.creationTimestamp \
+            -o jsonpath='{.items[*].metadata.name}' | \
+          awk '{for (i=1; i<=NF-2; i++) print $i}' | \
+          xargs -r kubectl delete rs -n demo || true
+        done

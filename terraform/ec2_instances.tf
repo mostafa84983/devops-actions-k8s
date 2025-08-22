@@ -16,3 +16,16 @@ resource "aws_instance" "k3s_node" {
     Name = "k3s-node"
   }
 }
+
+# Fetch kubeconfig directly from the EC2 instance
+data "external" "kubeconfig" {
+  depends_on = [aws_instance.k3s_node]
+
+  program = [
+    "bash", "-c", <<EOT
+      ssh -o StrictHostKeyChecking=no -i ${var.private_key_path} ubuntu@${aws_instance.k3s_node.public_ip} \
+      "sudo sed 's/127.0.0.1/${aws_instance.k3s_node.public_ip}/' /etc/rancher/k3s/k3s.yaml" | base64 -w 0 | jq -n --arg kubeconfig "$(</dev/stdin)" '{"kubeconfig":$kubeconfig}'
+    EOT
+  ]
+}
+
