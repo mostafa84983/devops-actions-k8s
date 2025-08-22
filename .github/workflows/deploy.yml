@@ -53,6 +53,15 @@ jobs:
         mkdir -p ~/.kube
         echo "${{ secrets.KUBECONFIG }}" | base64 -d > ~/.kube/config
         chmod 600 ~/.kube/config
+
+    - name: Create Kubernetes ECR pull secret
+      run: |
+        kubectl delete secret ecr-secret -n demo --ignore-not-found
+        kubectl create secret docker-registry ecr-secret \
+          --docker-server=${{ secrets.ECR_REPOSITORY }} \
+          --docker-username=AWS \
+          --docker-password=$(aws ecr get-login-password --region ${{ secrets.AWS_REGION }}) \
+          -n demo
     - name: Apply Kubernetes manifests
       run: |
         kubectl apply -f k8s/namespace.yaml --validate=false

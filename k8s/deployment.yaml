@@ -21,6 +21,6 @@ spec:
         # imagePullPolicy: Always
         ports:
         - containerPort: 5000
-      # imagePullSecrets:
-      # - name: ecr-registry
+      imagePullSecrets:
+      - name: ecr-registry
 
