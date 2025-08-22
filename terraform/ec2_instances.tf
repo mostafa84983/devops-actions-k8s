@@ -15,6 +15,22 @@ resource "aws_instance" "k3s_node" {
   tags = {
     Name = "k3s-node"
   }
+  
+  # Wait until kubeconfig file exists
+  provisioner "remote-exec" {
+    inline = [
+      "echo 'Waiting for k3s to finish...'",
+      "while [ ! -f /etc/rancher/k3s/k3s.yaml ]; do sleep 5; done",
+      "echo 'k3s ready!'"
+    ]
+
+    connection {
+      type        = "ssh"
+      host        = self.public_ip
+      user        = "ubuntu"
+      private_key = file(var.private_key_path)
+    }
+  }
 }
 
 # Fetch kubeconfig directly from the EC2 instance
@@ -24,8 +40,10 @@ data "external" "kubeconfig" {
   program = [
     "bash", "-c", <<EOT
       ssh -o StrictHostKeyChecking=no -i ${var.private_key_path} ubuntu@${aws_instance.k3s_node.public_ip} \
-      "sudo sed 's/127.0.0.1/${aws_instance.k3s_node.public_ip}/' /etc/rancher/k3s/k3s.yaml" | base64 -w 0 | jq -n --arg kubeconfig "$(</dev/stdin)" '{"kubeconfig":$kubeconfig}'
+      "sudo sed 's/127.0.0.1/${aws_instance.k3s_node.public_ip}/' /etc/rancher/k3s/k3s.yaml" \
+      | base64 -w0 | awk '{print "{\"kubeconfig\":\"" $0 "\"}"}'
     EOT
   ]
 }
+
 
