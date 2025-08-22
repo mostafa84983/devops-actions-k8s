@@ -17,10 +17,10 @@ spec:
     spec:
       containers:
       - name: flask-app
-        image: 050752620342.dkr.ecr.us-east-1.amazonaws.com/flask-k8s-demo:77898bc # short commit hash
-        imagePullPolicy: Always
+        image: 050752620342.dkr.ecr.us-east-1.amazonaws.com/flask-k8s-demo:v1 # short commit hash
+        # imagePullPolicy: Always
         ports:
         - containerPort: 5000
-      imagePullSecrets:
-      - name: ecr-registry
+      # imagePullSecrets:
+      # - name: ecr-registry
 
