@@ -55,8 +55,8 @@ jobs:
         chmod 600 ~/.kube/config
     - name: Apply Kubernetes manifests
       run: |
-        kubectl apply -f ~/k8s/deployment.yaml -n demo
-        kubectl apply -f ~/k8s/service.yaml -n demo
+        kubectl apply -f k8s/deployment.yaml -n demo
+        kubectl apply -f k8s/service.yaml -n demo
         kubectl rollout status deployment/flask-app -n demo
         kubectl get all -n demo
 
