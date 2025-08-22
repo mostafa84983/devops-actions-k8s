@@ -22,5 +22,5 @@ spec:
         ports:
         - containerPort: 5000
       imagePullSecrets:
-      - name: ecr-registry
+      - name: ecr-secret
 
