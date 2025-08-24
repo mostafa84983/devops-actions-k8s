@@ -7,7 +7,7 @@ output "ecr_repo_url" {
 }
 
 output "kubeconfig_b64" {
-  description = "Base64 encoded kubeconfig (ready for GitHub Actions secret)"
+  description = "Base64 encoded kubeconfig (for GitHub Actions secret)"
   value       = data.external.kubeconfig.result.kubeconfig
   sensitive   = true
 }
